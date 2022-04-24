@@ -10,5 +10,4 @@ sudo curl -L https://github.com/docker/compose/releases/latest/download/docker-c
 sudo chmod +x /usr/local/bin/docker-compose
 sudo chmod 666 /var/run/docker.sock
 sudo systemctl daemon-reexec
-sudo cd demo
-sudo docker-compose up
+docker-compose -f /home/ec2-user/demo/docker-compose.yml up -d
