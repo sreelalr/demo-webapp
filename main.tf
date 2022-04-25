@@ -1,4 +1,3 @@
-
 # Creating Key
 resource "aws_key_pair" "terraform-keys" {
   key_name   = "terraform"
@@ -15,7 +14,7 @@ resource "aws_instance" "webserver" {
   subnet_id              = aws_subnet.web-subnet[count.index].id
   key_name               = aws_key_pair.terraform-keys.key_name
   iam_instance_profile   = aws_iam_instance_profile.iam_ec2_profile.name
-  user_data              = file("install_web.sh")
+  user_data              = file("./scripts/install_web.sh")
 
   provisioner "file" {
     source      = "demo"
@@ -36,16 +35,16 @@ resource "aws_instance" "webserver" {
 }
 
 resource "aws_instance" "jenkins" {
-  ami             = data.aws_ami.amazon_linux.id
-  instance_type   = var.instance_type
-  key_name        = aws_key_pair.terraform-keys.key_name
+  ami                    = data.aws_ami.amazon_linux.id
+  instance_type          = var.instance_type
+  key_name               = aws_key_pair.terraform-keys.key_name
   availability_zone      = var.availability_zone_names[0]
   vpc_security_group_ids = [aws_security_group.jenkins_sg.id]
   subnet_id              = aws_subnet.web-subnet[0].id
-  user_data       = file("install_jenkins.sh")
+  user_data              = file("./scripts/install_jenkins.sh")
   iam_instance_profile   = aws_iam_instance_profile.iam_ec2_profile.name
 
-  
+
   tags = {
     Name = "Jenkins"
   }
@@ -66,7 +65,7 @@ resource "aws_instance" "jenkins" {
 #   vpc_security_group_ids = [aws_security_group.database-sg.id]
 # }
 
-# resource "aws_db_subnet_group" "default" {
+# resource "aws_db_subnet_group" "default" {External-LB-381353106.us-east-1.elb.amazonaws.com
 #   name       = "main"
 #   subnet_ids = [aws_subnet.database-subnet[0].id, aws_subnet.database-subnet[1].id]
 
@@ -75,15 +74,15 @@ resource "aws_instance" "jenkins" {
 #   }
 # }
 
-resource "aws_ecr_repository" "simple-web-app" {
-  name                 = "simple-web-app"
-  image_tag_mutability = "MUTABLE"
+# resource "aws_ecr_repository" "ecr_mysite" {
+#   name                 = "ecr_mysite"
+#   image_tag_mutability = "MUTABLE"
 
-  image_scanning_configuration {
-    scan_on_push = true
-  }
+#   image_scanning_configuration {
+#     scan_on_push = true
+#   }
 
-  tags = {
-    Name = "Elastic Container Registry to store Docker Artifacts"
-  }
-}
+#   tags = {
+#     Name = "Elastic Container Registry to store Docker Artifacts"
+#   }
+# }
