@@ -17,7 +17,7 @@ resource "aws_instance" "webserver" {
   user_data              = file("./scripts/install_web.sh")
 
   provisioner "file" {
-    source      = "demo"
+    source      = "deployment"
     destination = "/home/ec2-user/"
 
     connection {
